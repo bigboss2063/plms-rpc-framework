@@ -1,0 +1,2 @@
+roundRobin=com.plms.rpc.loadbalance.impl.RoundRobinLoadBalance
+random=com.plms.rpc.loadbalance.impl.RandomLoadBalance

@@ -12,4 +12,5 @@ import java.lang.annotation.*;
 @Target(ElementType.TYPE)
 public @interface SPI {
 
+    String value() default "";
 }

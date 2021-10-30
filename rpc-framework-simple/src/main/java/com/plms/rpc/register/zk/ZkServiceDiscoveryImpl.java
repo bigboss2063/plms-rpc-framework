@@ -2,6 +2,7 @@ package com.plms.rpc.register.zk;
 
 import com.esotericsoftware.minlog.Log;
 import com.plms.rpc.exception.RpcException;
+import com.plms.rpc.extension.ExtensionLoader;
 import com.plms.rpc.factory.SingletonFactory;
 import com.plms.rpc.loadbalance.LoadBalance;
 import com.plms.rpc.loadbalance.impl.RandomLoadBalance;
@@ -25,6 +26,10 @@ public class ZkServiceDiscoveryImpl implements ServiceDiscovery {
 
     private LoadBalance loadBalance;
 
+    public ZkServiceDiscoveryImpl() {
+        this.loadBalance = ExtensionLoader.getExtensionLoader(LoadBalance.class).getExtension("default");
+    }
+
     @Override
     public InetSocketAddress discoveryService(RpcRequest rpcRequest) {
         String serviceName = rpcRequest.getServiceName();
@@ -33,9 +38,7 @@ public class ZkServiceDiscoveryImpl implements ServiceDiscovery {
         if (serviceUrlList == null && serviceUrlList.size() == 0) {
             throw new RpcException("service [" + serviceName + "] not exist");
         }
-        // loadBalance = new RandomLoadBalance();
-        loadBalance = SingletonFactory.getInstance(RoundRobinLoadBalance.class);
-        String serviceUrl = this.loadBalance.serverLoadBalance(rpcRequest, serviceUrlList);
+        String serviceUrl = loadBalance.serverLoadBalance(rpcRequest, serviceUrlList);
         log.info("serviceUrl:{}", serviceUrl);
         serviceUrl = removeWeight(serviceUrl);
         return new InetSocketAddress(serviceUrl.split(":")[0], Integer.parseInt(serviceUrl.split(":")[1]));
