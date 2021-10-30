@@ -16,7 +16,7 @@ public class RpcTest {
     @Test
     public void serverTest() throws ClassNotFoundException, InstantiationException, IllegalAccessException {
         NettyRpcSever nettyRpcSever = new NettyRpcSever(7777);
-        Class<?> target = Class.forName("com.plms.rpc.TestServiceImpl");
+        Class<?> target = Class.forName("com.plms.rpc.TestServiceImpl1");
         Object o = target.newInstance();
         RpcConfig rpcConfig = RpcConfig.builder()
                 .service(o)
@@ -28,7 +28,11 @@ public class RpcTest {
     @Test
     public void clientTest() {
         NettyRpcClient nettyRpcClient = new NettyRpcClient();
-        RpcClientProxy rpcClientProxy = new RpcClientProxy(nettyRpcClient);
+        RpcConfig rpcConfig = RpcConfig.builder()
+                .group("test1")
+                .version("version1")
+                .build();
+        RpcClientProxy rpcClientProxy = new RpcClientProxy(nettyRpcClient, rpcConfig);
         TestService proxy = rpcClientProxy.getProxy(TestService.class);
         System.out.println(proxy.hello());
     }

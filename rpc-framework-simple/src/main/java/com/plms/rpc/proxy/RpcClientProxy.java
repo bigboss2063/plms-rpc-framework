@@ -1,5 +1,6 @@
 package com.plms.rpc.proxy;
 
+import com.plms.rpc.config.RpcConfig;
 import com.plms.rpc.remoting.client.NettyRpcClient;
 import com.plms.rpc.remoting.dto.RpcRequest;
 
@@ -14,10 +15,12 @@ import java.util.UUID;
  */
 public class RpcClientProxy implements InvocationHandler {
 
-    private NettyRpcClient nettyRpcClient;
+    private final NettyRpcClient nettyRpcClient;
+    private final RpcConfig rpcConfig;
 
-    public RpcClientProxy(NettyRpcClient nettyRpcClient) {
+    public RpcClientProxy(NettyRpcClient nettyRpcClient, RpcConfig rpcConfig) {
         this.nettyRpcClient = nettyRpcClient;
+        this.rpcConfig = rpcConfig;
     }
 
     @SuppressWarnings("unchecked")
@@ -33,7 +36,10 @@ public class RpcClientProxy implements InvocationHandler {
                 .serviceName(method.getDeclaringClass().getCanonicalName())
                 .parameterTypes(method.getParameterTypes())
                 .parameterValues(args)
+                .group(rpcConfig.getGroup())
+                .version(rpcConfig.getVersion())
                 .build();
+        System.out.println(rpcRequest);
         return nettyRpcClient.sendRpcRequest(rpcRequest);
     }
 }

@@ -44,4 +44,18 @@ public class RpcRequest implements Serializable {
      * 参数数值数组
      */
     private Object[] parameterValues;
+
+    /**
+     * 实现类分组
+     */
+    private String group;
+
+    /**
+     * 版本号
+     */
+    private String version;
+
+    public String getRpcServiceName() {
+        return this.getServiceName() + this.getGroup() + this.getVersion();
+    }
 }

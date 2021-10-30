@@ -33,7 +33,7 @@ public class RpcServerHandler extends SimpleChannelInboundHandler<RpcMessage> {
         if (rpcRequestMessage.getMessageType() == RpcConstants.REQUEST_TYPE) {
             rpcResponseMessage.setMessageType(RpcConstants.RESPONSE_TYPE);
             RpcRequest rpcRequest = (RpcRequest) rpcRequestMessage.getData();
-            Object service = serviceProvider.getService(rpcRequest.getServiceName());
+            Object service = serviceProvider.getService(rpcRequest.getRpcServiceName());
             Method method = service.getClass().getMethod(rpcRequest.getMethodName(), rpcRequest.getParameterTypes());
             Object result = method.invoke(service, rpcRequest.getParameterValues());
             if (ctx.channel().isActive() && ctx.channel().isWritable()) {

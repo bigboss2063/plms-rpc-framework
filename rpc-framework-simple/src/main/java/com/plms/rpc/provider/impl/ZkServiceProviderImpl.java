@@ -37,7 +37,7 @@ public class ZkServiceProviderImpl implements ServiceProvider {
 
     @Override
     public void addService(RpcConfig rpcConfig) {
-        String serviceName = rpcConfig.getServiceName();
+        String serviceName = rpcConfig.getRpcServiceName();
         if (registerService.contains(serviceName)) {
             return;
         }

@@ -32,7 +32,7 @@ public class ZkServiceDiscoveryImpl implements ServiceDiscovery {
 
     @Override
     public InetSocketAddress discoveryService(RpcRequest rpcRequest) {
-        String serviceName = rpcRequest.getServiceName();
+        String serviceName = rpcRequest.getRpcServiceName();
         CuratorFramework zkClient = CuratorUtils.getZkClient();
         List<String> serviceUrlList = CuratorUtils.getChildrenNodes(zkClient, serviceName);
         if (serviceUrlList == null) {

@@ -15,7 +15,7 @@ public class ZkServiceRegisterImpl implements ServiceRegister {
 
     @Override
     public void registerService(RpcConfig rpcConfig, InetSocketAddress address) throws Exception {
-        String path = CuratorUtils.ZK_REGISTER_ROOT_PATH + "/" + rpcConfig.getServiceName() + address.toString() + "#" + rpcConfig.getWeight();
+        String path = CuratorUtils.ZK_REGISTER_ROOT_PATH + "/" + rpcConfig.getRpcServiceName() + address.toString() + "#" + rpcConfig.getWeight();
         CuratorFramework zkClient = CuratorUtils.getZkClient();
         CuratorUtils.createPersistentNode(zkClient, path);
     }

@@ -17,7 +17,15 @@ public class RpcConfig {
 
     private Object service;
 
+    private String group = "";
+
+    private String version = "";
+
     public String getServiceName() {
         return this.service.getClass().getInterfaces()[0].getCanonicalName();
+    }
+
+    public String getRpcServiceName() {
+        return this.getServiceName() + this.getGroup() + this.getVersion();
     }
 }
