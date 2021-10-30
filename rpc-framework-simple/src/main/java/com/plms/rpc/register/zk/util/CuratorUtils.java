@@ -29,13 +29,15 @@ public class CuratorUtils {
 
     private static final int BASE_SLEEP_TIME = 1000;
     private static final int MAX_RETRIES = 3;
+    private static final int WAITING_CONNECT_TIME = 30;
     public static final String ZK_REGISTER_ROOT_PATH = "/plms-rpc";
     private static final Map<String, List<String>> SERVICE_ADDRESS_MAP = new ConcurrentHashMap<>();
     private static final Set<String> REGISTERED_PATH_SET = ConcurrentHashMap.newKeySet();
     private static CuratorFramework zkClient;
     private static final String DEFAULT_ZOOKEEPER_ADDRESS = "127.0.0.1:2181";
 
-    private CuratorUtils() {}
+    private CuratorUtils() {
+    }
 
     public static CuratorFramework getZkClient() {
         Properties properties = PropertiesFileUtil.readPropertiesFile(RpcConfigEnum.RPC_CONFIG_PATH.getPropertyValue());
@@ -51,7 +53,7 @@ public class CuratorUtils {
                 .build();
         zkClient.start();
         try {
-            if (!zkClient.blockUntilConnected(30, TimeUnit.SECONDS)) {
+            if (!zkClient.blockUntilConnected(WAITING_CONNECT_TIME, TimeUnit.SECONDS)) {
                 throw new RuntimeException("Connection Time Out!");
             }
         } catch (InterruptedException e) {
@@ -115,5 +117,6 @@ public class CuratorUtils {
             SERVICE_ADDRESS_MAP.put(rpcServiceName, childrenNodes);
         });
         pathChildrenCache.start();
+
     }
 }

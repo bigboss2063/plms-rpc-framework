@@ -29,8 +29,8 @@ public class NettyRpcSever {
     private NioEventLoopGroup workers;
     private final ServiceProvider serviceProvider = SingletonFactory.getInstance(ZkServiceProviderImpl.class);
 
-    public NettyRpcSever(Integer PORT) {
-        NettyRpcSever.PORT = PORT;
+    public NettyRpcSever(Integer port) {
+        NettyRpcSever.PORT = port;
     }
 
     public void registerService(RpcConfig rpcConfig) {

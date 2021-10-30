@@ -40,6 +40,7 @@ public final class ExtensionLoader<T> {
 
     /**
      * 获取实现类加载器
+     *
      * @param type 接口类型
      * @return 实现类加载器
      */
@@ -141,7 +142,9 @@ public final class ExtensionLoader<T> {
                     throw new IllegalArgumentException("more than 1 default extension name on extension" +
                             type.getName() + ": " + Arrays.toString(names));
                 }
-                if (names.length == 1) CACHED_DEFAULT_NAME = names[0];
+                if (names.length == 1) {
+                    CACHED_DEFAULT_NAME = names[0];
+                }
             }
         }
         HashMap<String, Class<?>> extensionClasses = new HashMap<>();
@@ -155,7 +158,7 @@ public final class ExtensionLoader<T> {
             Enumeration<URL> urls;
             ClassLoader classLoader = ExtensionLoader.class.getClassLoader();
 
-            urls = classLoader.getSystemResources(fileName);
+            urls = classLoader.getResources(fileName);
             if (urls != null) {
                 while (urls.hasMoreElements()) {
                     URL resourceUrl = urls.nextElement();

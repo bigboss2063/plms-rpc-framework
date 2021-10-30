@@ -1,6 +1,7 @@
 package com.plms.rpc.remoting.client.handler;
 
 import com.plms.rpc.constant.RpcConstants;
+import com.plms.rpc.enums.RpcResponseCodeEnum;
 import com.plms.rpc.exception.RpcException;
 import com.plms.rpc.factory.SingletonFactory;
 import com.plms.rpc.remoting.client.NettyRpcClient;
@@ -41,9 +42,9 @@ public class RpcClientHandler extends SimpleChannelInboundHandler<RpcMessage> {
             RpcResponse<Object> rpcResponse = (RpcResponse<Object>) rpcMessage.getData();
             Promise<Object> promise = UN_PROCESSED_TASK.remove(rpcResponse.getRequestId());
             if (promise != null) {
-                if (rpcResponse.getCode() == 200) {
+                if (rpcResponse.getCode() == RpcResponseCodeEnum.SUCCESS.getCode()) {
                     promise.setSuccess(rpcResponse.getData());
-                } else if (rpcResponse.getCode() == 400) {
+                } else if (rpcResponse.getCode() == RpcResponseCodeEnum.FAIL.getCode()) {
                     promise.setFailure(new RpcException("remote call is failed!"));
                 }
             }
