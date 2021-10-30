@@ -14,7 +14,7 @@
     - [ ] 一致性哈希算法 ConsistentHashLoadBalance
 - [ ] 处理一个类有多个类实现的情况；
 - [ ] 集成plms-spring通过注解注册消费服务；
-- [ ] 使用SPI机制；
+- [ ] 模仿Dubbo实现SPI机制；
 - [ ] 增加序列化的方式；
 - [ ] 增加Redis作为注册中心；
 - [ ] 设置gzip压缩；

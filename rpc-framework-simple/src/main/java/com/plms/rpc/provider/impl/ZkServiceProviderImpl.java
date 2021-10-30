@@ -3,6 +3,7 @@ package com.plms.rpc.provider.impl;
 import com.plms.rpc.config.RpcConfig;
 import com.plms.rpc.constant.RpcConstants;
 import com.plms.rpc.exception.RpcException;
+import com.plms.rpc.extension.ExtensionLoader;
 import com.plms.rpc.provider.ServiceProvider;
 import com.plms.rpc.register.ServiceRegister;
 import com.plms.rpc.register.zk.ZkServiceRegisterImpl;
@@ -31,13 +32,12 @@ public class ZkServiceProviderImpl implements ServiceProvider {
     public ZkServiceProviderImpl() {
         serviceMap = new ConcurrentHashMap<>();
         registerService = ConcurrentHashMap.newKeySet();
-        serviceRegister = new ZkServiceRegisterImpl();
+        serviceRegister = ExtensionLoader.getExtensionLoader(ServiceRegister.class).getExtension("zk");
     }
 
     @Override
     public void addService(RpcConfig rpcConfig) {
         String serviceName = rpcConfig.getServiceName();
-        System.out.println(serviceName);
         if (registerService.contains(serviceName)) {
             return;
         }

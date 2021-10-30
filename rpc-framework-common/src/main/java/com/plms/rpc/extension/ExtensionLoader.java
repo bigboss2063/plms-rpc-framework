@@ -1,6 +1,5 @@
 package com.plms.rpc.extension;
 
-import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import lombok.extern.slf4j.Slf4j;
 
@@ -29,7 +28,7 @@ public final class ExtensionLoader<T> {
     private static final ConcurrentMap<Class<?>, ExtensionLoader<?>> EXTENSION_LOADERS = new ConcurrentHashMap<>();
     private static final ConcurrentMap<String, Holder<Object>> CACHED_INSTANCES = new ConcurrentHashMap<>();
     private static final ConcurrentMap<Class<?>, Object> EXTENSION_INSTANCES = new ConcurrentHashMap<>();
-    private static final Holder<Map<String, Class<?>>> CACHED_CLASSES = new Holder<>();
+    private final Holder<Map<String, Class<?>>> CACHED_CLASSES = new Holder<>();
     private static final Pattern NAME_SEPARATOR = Pattern.compile("\\s*[,]+\\s*");
     private static String CACHED_DEFAULT_NAME = null;
     private final Class<?> type;
@@ -41,7 +40,6 @@ public final class ExtensionLoader<T> {
 
     /**
      * 获取实现类加载器
-     *
      * @param type 接口类型
      * @return 实现类加载器
      */
@@ -74,7 +72,7 @@ public final class ExtensionLoader<T> {
             throw new IllegalArgumentException("extension name can not be null");
         }
         if ("default".equals(name)) {
-            return getDefalutExtension();
+            return getDefaultExtension();
         }
         Holder<Object> holder = CACHED_INSTANCES.get(name); // 去缓存里找有没有实现类名称对应的持有目标对象
         if (holder == null) {
@@ -94,7 +92,7 @@ public final class ExtensionLoader<T> {
         return (T) instance;
     }
 
-    private T getDefalutExtension() {
+    private T getDefaultExtension() {
         getExtensionClasses();
         if (StrUtil.hasBlank(CACHED_DEFAULT_NAME) || "default".equals(CACHED_DEFAULT_NAME)) {
             return null;

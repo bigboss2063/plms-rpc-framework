@@ -1,6 +1,7 @@
 package com.plms.rpc.loadbalance;
 
 import com.plms.rpc.TestService;
+import com.plms.rpc.extension.ExtensionLoader;
 import com.plms.rpc.proxy.RpcClientProxy;
 import com.plms.rpc.register.ServiceDiscovery;
 import com.plms.rpc.register.zk.ZkServiceDiscoveryImpl;
@@ -26,7 +27,7 @@ public class LoadBalanceTest {
                 .parameterTypes(null)
                 .parameterValues(null)
                 .build();
-        ServiceDiscovery serviceDiscovery = new ZkServiceDiscoveryImpl();
+        ServiceDiscovery serviceDiscovery = ExtensionLoader.getExtensionLoader(ServiceDiscovery.class).getExtension("zk");
         for (int i = 0; i < 12; i++) {
             serviceDiscovery.discoveryService(rpcRequest);
         }
