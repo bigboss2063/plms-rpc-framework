@@ -10,8 +10,8 @@
 - [ ] 客户端远程调用的时候根据相应的策略进行负载均衡；
     - [x] 随机权重 RandomLoadBalance；
     - [x] 加权轮询算法 LeastActiveLoadBalance；
-    - [ ] 轮询调用算法 RoundRobinLoadBalance；
-    - [ ] 一致性哈希算法 ConsistentHashLoadBalance
+    - [ ] 最少活跃数算法 RoundRobinLoadBalance；
+    - [ ] 一致性哈希算法 ConsistentHashLoadBalance；
 - [ ] 处理一个类有多个类实现的情况；
 - [ ] 集成plms-spring通过注解注册消费服务；
 - [x] 模仿Dubbo使用SPI机制；
@@ -31,7 +31,9 @@ public class RpcClient {
         proxy.hello(); // 远程调用服务
     }
 }
+```
 
+```java
 // 服务端
 public class RpcServer {
     public static void main(String[] args) throws ClassNotFoundException, InstantiationException, IllegalAccessException {
@@ -47,5 +49,9 @@ public class RpcServer {
         nettyRpcSever.start(); // 启动服务
     }
 }
+```
+
+```properties
+zookeeper.address=zookeeper服务地址 #resources/config目录下的配置文件
 ```
 
