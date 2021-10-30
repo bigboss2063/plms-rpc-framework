@@ -1,6 +1,7 @@
 package com.plms.rpc.remoting.client;
 
 import com.plms.rpc.exception.RpcException;
+import com.plms.rpc.extension.ExtensionLoader;
 import com.plms.rpc.factory.SingletonFactory;
 import com.plms.rpc.register.ServiceDiscovery;
 import com.plms.rpc.register.zk.ZkServiceDiscoveryImpl;
@@ -38,7 +39,7 @@ public class NettyRpcClient {
     private ServiceDiscovery serviceDiscovery;
     private ChannelProvider channelProvider;
     public NettyRpcClient() {
-        serviceDiscovery = new ZkServiceDiscoveryImpl();
+        serviceDiscovery = ExtensionLoader.getExtensionLoader(ServiceDiscovery.class).getExtension("zk");
         channelProvider = SingletonFactory.getInstance(ChannelProvider.class);
         eventLoopGroup = new NioEventLoopGroup();
         bootstrap = new Bootstrap();

@@ -27,6 +27,7 @@ public class ServiceShutDownHooker {
             try {
                 InetSocketAddress inetSocketAddress = new InetSocketAddress(InetAddress.getLocalHost().getHostAddress(), NettyRpcSever.PORT);
                 CuratorUtils.clearRegistry(CuratorUtils.getZkClient(), inetSocketAddress);
+                log.info("clear all nodes of [{}]", inetSocketAddress);
             } catch (UnknownHostException e) {
                 e.printStackTrace();
             }

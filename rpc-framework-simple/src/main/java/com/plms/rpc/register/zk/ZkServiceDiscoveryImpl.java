@@ -35,7 +35,7 @@ public class ZkServiceDiscoveryImpl implements ServiceDiscovery {
         String serviceName = rpcRequest.getServiceName();
         CuratorFramework zkClient = CuratorUtils.getZkClient();
         List<String> serviceUrlList = CuratorUtils.getChildrenNodes(zkClient, serviceName);
-        if (serviceUrlList == null && serviceUrlList.size() == 0) {
+        if (serviceUrlList == null) {
             throw new RpcException("service [" + serviceName + "] not exist");
         }
         String serviceUrl = loadBalance.serverLoadBalance(rpcRequest, serviceUrlList);

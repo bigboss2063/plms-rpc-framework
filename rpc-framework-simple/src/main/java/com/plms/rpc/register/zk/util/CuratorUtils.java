@@ -10,6 +10,7 @@ import org.apache.curator.framework.imps.CuratorFrameworkState;
 import org.apache.curator.framework.recipes.cache.PathChildrenCache;
 import org.apache.curator.retry.ExponentialBackoffRetry;
 import org.apache.zookeeper.CreateMode;
+import org.apache.zookeeper.KeeperException;
 
 import java.net.InetSocketAddress;
 import java.util.List;
@@ -84,6 +85,8 @@ public class CuratorUtils {
             result = zkClient.getChildren().forPath(servicePath);
             SERVICE_ADDRESS_MAP.put(rpcServiceName, result);
             registerWatcher(zkClient, rpcServiceName);
+        } catch (KeeperException e) {
+            log.error("NoNode for [{}]", rpcServiceName);
         } catch (Exception e) {
             e.printStackTrace();
             log.error("get children nodes of [{}] unsuccessfully", rpcServiceName);
