@@ -1,19 +1,15 @@
 package com.plms.rpc.provider.impl;
 
 import com.plms.rpc.config.RpcConfig;
-import com.plms.rpc.constant.RpcConstants;
 import com.plms.rpc.exception.RpcException;
 import com.plms.rpc.extension.ExtensionLoader;
 import com.plms.rpc.provider.ServiceProvider;
 import com.plms.rpc.register.ServiceRegister;
-import com.plms.rpc.register.zk.ZkServiceRegisterImpl;
-import com.plms.rpc.remoting.sever.NettyRpcSever;
+import com.plms.rpc.remoting.sever.NettyRpcServer;
 import lombok.extern.slf4j.Slf4j;
 
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
-import java.net.UnknownHostException;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
@@ -32,7 +28,7 @@ public class ZkServiceProviderImpl implements ServiceProvider {
     public ZkServiceProviderImpl() {
         serviceMap = new ConcurrentHashMap<>();
         registerService = ConcurrentHashMap.newKeySet();
-        serviceRegister = ExtensionLoader.getExtensionLoader(ServiceRegister.class).getExtension("zk");
+        serviceRegister = ExtensionLoader.getExtensionLoader(ServiceRegister.class).getExtension("zkRegister");
     }
 
     @Override
@@ -43,7 +39,7 @@ public class ZkServiceProviderImpl implements ServiceProvider {
         }
         registerService.add(serviceName);
         serviceMap.put(serviceName, rpcConfig.getService());
-        log.info("service [{}] has been added into service center", serviceName);
+        log.info("服务 [{}] 已经被添加进服务中心", serviceName);
     }
 
     @Override
@@ -60,7 +56,7 @@ public class ZkServiceProviderImpl implements ServiceProvider {
         try {
             String host = InetAddress.getLocalHost().getHostAddress();
             this.addService(rpcConfig);
-            serviceRegister.registerService(rpcConfig, new InetSocketAddress(host, NettyRpcSever.PORT));
+            serviceRegister.registerService(rpcConfig, new InetSocketAddress(host, 9999));
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -11,6 +11,5 @@ import java.net.InetSocketAddress;
  */
 @SPI
 public interface ServiceRegister {
-
     void registerService(RpcConfig rpcConfig, InetSocketAddress address) throws Exception;
 }

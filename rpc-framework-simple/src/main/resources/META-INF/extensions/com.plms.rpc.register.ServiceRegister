@@ -1,1 +1,1 @@
-zk=com.plms.rpc.register.zk.ZkServiceRegisterImpl
+zkRegister=com.plms.rpc.register.zk.ZkServiceRegisterImpl

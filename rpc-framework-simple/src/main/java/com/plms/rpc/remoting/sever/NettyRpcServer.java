@@ -15,23 +15,21 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.timeout.IdleStateHandler;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 
 /**
  * @Author bigboss
  * @Date 2021/10/27 13:22
  */
 @Slf4j
-public class NettyRpcSever {
+@Component(value = "nettyRpcServer")
+public class NettyRpcServer {
 
     public static Integer PORT;
     private ServerBootstrap serverBootstrap;
     private NioEventLoopGroup boss;
     private NioEventLoopGroup workers;
     private final ServiceProvider serviceProvider = SingletonFactory.getInstance(ZkServiceProviderImpl.class);
-
-    public NettyRpcSever(Integer port) {
-        NettyRpcSever.PORT = port;
-    }
 
     public void registerService(RpcConfig rpcConfig) {
         serviceProvider.publishService(rpcConfig);
@@ -55,7 +53,7 @@ public class NettyRpcSever {
                             pipeline.addLast(new RpcServerHandler());
                         }
                     });
-            ChannelFuture future = serverBootstrap.bind(PORT).sync();
+            ChannelFuture future = serverBootstrap.bind(9999).sync();
             future.channel().closeFuture().sync();
         } catch (InterruptedException e) {
             log.error("occur exception when start server:", e);

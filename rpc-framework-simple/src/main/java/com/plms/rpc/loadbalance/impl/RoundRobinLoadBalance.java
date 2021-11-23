@@ -28,7 +28,6 @@ public class RoundRobinLoadBalance extends AbstractLoadBalance {
 
     @Override
     protected String doSelect(RpcRequest rpcRequest, List<String> serviceUrlList) {
-        System.out.println(sequences);
         String key = rpcRequest.getServiceName();
         int length = serviceUrlList.size();
         int maxWeight = 0;

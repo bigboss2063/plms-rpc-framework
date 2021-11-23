@@ -1,8 +1,7 @@
 package com.plms.rpc.remoting.sever.hooker;
 
-import com.plms.rpc.constant.RpcConstants;
 import com.plms.rpc.register.zk.util.CuratorUtils;
-import com.plms.rpc.remoting.sever.NettyRpcSever;
+import com.plms.rpc.remoting.sever.NettyRpcServer;
 import lombok.extern.slf4j.Slf4j;
 
 import java.net.InetAddress;
@@ -25,9 +24,9 @@ public class ServiceShutDownHooker {
         log.info("addShutdownHook for clearAll");
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             try {
-                InetSocketAddress inetSocketAddress = new InetSocketAddress(InetAddress.getLocalHost().getHostAddress(), NettyRpcSever.PORT);
+                InetSocketAddress inetSocketAddress = new InetSocketAddress(InetAddress.getLocalHost().getHostAddress(), NettyRpcServer.PORT);
                 CuratorUtils.clearRegistry(CuratorUtils.getZkClient(), inetSocketAddress);
-                log.info("clear all nodes of [{}]", inetSocketAddress);
+                log.info("删除服务器 [{}] 的所有节点", inetSocketAddress);
             } catch (UnknownHostException e) {
                 e.printStackTrace();
             }

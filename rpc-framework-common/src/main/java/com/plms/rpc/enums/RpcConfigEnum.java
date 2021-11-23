@@ -13,9 +13,25 @@ import lombok.ToString;
 @ToString
 public enum RpcConfigEnum {
 
+    /**
+     * RPC配置文件路径
+     */
     RPC_CONFIG_PATH("config/plms-rpc.properties"),
 
-    ZOOKEEPER_ADDRESS("zookeeper.address");
+    /**
+     * zookeeper地址
+     */
+    ZOOKEEPER_ADDRESS("zookeeper.address"),
+
+    /**
+     * redis地址
+     */
+    REDIS_ADDRESS("redis.address"),
+
+    /**
+     * redis密码
+     */
+    REDIS_PASSWORD("redis.password");
 
     private final String propertyValue;
 }

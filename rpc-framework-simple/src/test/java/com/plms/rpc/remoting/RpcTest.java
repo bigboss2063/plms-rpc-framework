@@ -4,7 +4,7 @@ import com.plms.rpc.TestService;
 import com.plms.rpc.config.RpcConfig;
 import com.plms.rpc.proxy.RpcClientProxy;
 import com.plms.rpc.remoting.client.NettyRpcClient;
-import com.plms.rpc.remoting.sever.NettyRpcSever;
+import com.plms.rpc.remoting.sever.NettyRpcServer;
 import org.junit.Test;
 
 /**
@@ -15,14 +15,14 @@ public class RpcTest {
 
     @Test
     public void serverTest() throws ClassNotFoundException, InstantiationException, IllegalAccessException {
-        NettyRpcSever nettyRpcSever = new NettyRpcSever(7777);
+        NettyRpcServer nettyRpcServer = new NettyRpcServer();
         Class<?> target = Class.forName("com.plms.rpc.TestServiceImpl1");
         Object o = target.newInstance();
         RpcConfig rpcConfig = RpcConfig.builder()
                 .service(o)
                 .build();
-        nettyRpcSever.registerService(rpcConfig);
-        nettyRpcSever.start();
+        nettyRpcServer.registerService(rpcConfig);
+        nettyRpcServer.start();
     }
 
     @Test
@@ -34,6 +34,6 @@ public class RpcTest {
                 .build();
         RpcClientProxy rpcClientProxy = new RpcClientProxy(nettyRpcClient, rpcConfig);
         TestService proxy = rpcClientProxy.getProxy(TestService.class);
-        System.out.println(proxy.hello());
+        proxy.hello();
     }
 }

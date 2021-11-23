@@ -1,15 +1,15 @@
 package com.plms.rpc.remoting.codec;
 
 import com.plms.rpc.constant.RpcConstants;
+import com.plms.rpc.enums.CompressTypeEnum;
+import com.plms.rpc.extension.ExtensionLoader;
 import com.plms.rpc.remoting.dto.RpcMessage;
 import com.plms.rpc.serialize.Serializer;
-import com.plms.rpc.serialize.kryo.KryoSerializer;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToByteEncoder;
 import lombok.extern.slf4j.Slf4j;
-
-import java.nio.charset.StandardCharsets;
+import com.plms.rpc.compress.Compress;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -29,14 +29,17 @@ public class RpcMessageEncoder extends MessageToByteEncoder<RpcMessage> {
             out.writerIndex(out.writerIndex() + 4);
             out.writeByte(rpcMessage.getMessageType());
             out.writeByte(rpcMessage.getCodec());
-            out.writeByte((byte) 0x01);
+            out.writeByte(CompressTypeEnum.GZIP.getCode());
             out.writeInt(ATOMIC_INTEGER.getAndIncrement());
             int fullLength = RpcConstants.HEAD_LENGTH;
             byte[] body = null;
             if (rpcMessage.getMessageType() != RpcConstants.HEARTBEAT_REQUEST_TYPE
                 && rpcMessage.getMessageType() != RpcConstants.HEARTBEAT_RESPONSE_TYPE) {
-                Serializer serializer = new KryoSerializer();
+                Serializer serializer = ExtensionLoader.getExtensionLoader(Serializer.class).getExtension("kyro");
                 body = serializer.serializer(rpcMessage.getData());
+                String compressName = CompressTypeEnum.getName(rpcMessage.getCompress());
+                Compress compress = ExtensionLoader.getExtensionLoader(Compress.class).getExtension(compressName);
+                body = compress.compress(body);
                 fullLength += body.length;
             }
             if (body != null) {

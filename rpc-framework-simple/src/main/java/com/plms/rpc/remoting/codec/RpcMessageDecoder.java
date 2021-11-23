@@ -1,6 +1,10 @@
 package com.plms.rpc.remoting.codec;
 
+import com.plms.rpc.compress.Compress;
 import com.plms.rpc.constant.RpcConstants;
+import com.plms.rpc.enums.CompressTypeEnum;
+import com.plms.rpc.enums.SerializationTypeEnum;
+import com.plms.rpc.extension.ExtensionLoader;
 import com.plms.rpc.remoting.dto.RpcMessage;
 import com.plms.rpc.remoting.dto.RpcRequest;
 import com.plms.rpc.remoting.dto.RpcResponse;
@@ -87,7 +91,12 @@ public class RpcMessageDecoder extends LengthFieldBasedFrameDecoder {
         if (bodyLength > 0) {
             byte[] body = new byte[bodyLength];
             in.readBytes(body);
-            Serializer serializer = new KryoSerializer();
+            String compressName = CompressTypeEnum.getName(compressType);
+            Compress compress = ExtensionLoader.getExtensionLoader(Compress.class)
+                    .getExtension(compressName);
+            body = compress.decompress(body);
+            String codecName = SerializationTypeEnum.getName(codecType);
+            Serializer serializer = ExtensionLoader.getExtensionLoader(Serializer.class).getExtension(codecName);
             if (messageType == RpcConstants.REQUEST_TYPE) {
                 RpcRequest rpcRequest = serializer.deserializer(body, RpcRequest.class);
                 rpcMessage.setData(rpcRequest);

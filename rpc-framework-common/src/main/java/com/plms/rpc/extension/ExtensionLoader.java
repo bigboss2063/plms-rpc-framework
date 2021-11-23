@@ -63,7 +63,7 @@ public final class ExtensionLoader<T> {
     }
 
     /**
-     * 根据实现类名称获取实现类
+     * 根据实现类名称获取实现类实例
      *
      * @param name 实现类名称
      * @return 实现类
@@ -157,7 +157,6 @@ public final class ExtensionLoader<T> {
         try {
             Enumeration<URL> urls;
             ClassLoader classLoader = ExtensionLoader.class.getClassLoader();
-
             urls = classLoader.getResources(fileName);
             if (urls != null) {
                 while (urls.hasMoreElements()) {

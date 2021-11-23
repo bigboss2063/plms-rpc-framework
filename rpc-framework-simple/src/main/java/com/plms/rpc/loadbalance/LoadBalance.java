@@ -9,7 +9,7 @@ import java.util.List;
  * @Author bigboss
  * @Date 2021/10/28 20:44
  */
-@SPI(value = "roundRobin")
+@SPI
 public interface LoadBalance {
     String serverLoadBalance(RpcRequest rpcRequest, List<String> serviceUrlList);
 }

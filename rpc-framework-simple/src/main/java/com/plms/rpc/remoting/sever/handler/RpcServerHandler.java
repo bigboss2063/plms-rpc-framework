@@ -25,6 +25,7 @@ import java.lang.reflect.Method;
 public class RpcServerHandler extends SimpleChannelInboundHandler<RpcMessage> {
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, RpcMessage rpcRequestMessage) throws Exception {
+        System.out.println(rpcRequestMessage.toString());
         ServiceProvider serviceProvider = SingletonFactory.getInstance(ZkServiceProviderImpl.class);
         RpcMessage rpcResponseMessage = RpcMessage.builder()
                 .codec((byte) 1)
@@ -64,7 +65,7 @@ public class RpcServerHandler extends SimpleChannelInboundHandler<RpcMessage> {
         if (evt instanceof IdleStateEvent) {
             if (((IdleStateEvent) evt).state() == IdleState.READER_IDLE) {
                 ctx.channel().close();
-                log.info("More than 30 seconds without receiving client messages, automatically disconnect with client");
+                log.info("超过30秒未收到客户端消息，连接自动关闭！");
             }
         } else {
             super.userEventTriggered(ctx, evt);
@@ -73,12 +74,12 @@ public class RpcServerHandler extends SimpleChannelInboundHandler<RpcMessage> {
 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-        log.info("connection has been cut!");
+        log.info("和 [{}] 连接已经断开！", ctx.channel().remoteAddress());
     }
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-        log.info("server exception was caught!");
+        log.error("服务器出现错误");
         ctx.close();
         cause.printStackTrace();
     }

@@ -1,5 +1,7 @@
 package com.plms.rpc.remoting.client;
 
+import com.plms.rpc.enums.CompressTypeEnum;
+import com.plms.rpc.enums.SerializationTypeEnum;
 import com.plms.rpc.exception.RpcException;
 import com.plms.rpc.extension.ExtensionLoader;
 import com.plms.rpc.factory.SingletonFactory;
@@ -23,6 +25,7 @@ import io.netty.handler.timeout.IdleStateHandler;
 import io.netty.util.concurrent.DefaultPromise;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 
 import java.net.InetSocketAddress;
 import java.util.concurrent.CompletableFuture;
@@ -39,7 +42,7 @@ public class NettyRpcClient {
     private ServiceDiscovery serviceDiscovery;
     private ChannelProvider channelProvider;
     public NettyRpcClient() {
-        serviceDiscovery = ExtensionLoader.getExtensionLoader(ServiceDiscovery.class).getExtension("zk");
+        serviceDiscovery = ExtensionLoader.getExtensionLoader(ServiceDiscovery.class).getExtension("zkDiscovery");
         channelProvider = SingletonFactory.getInstance(ChannelProvider.class);
         eventLoopGroup = new NioEventLoopGroup();
         bootstrap = new Bootstrap();
@@ -84,8 +87,8 @@ public class NettyRpcClient {
         RpcMessage rpcMessage = RpcMessage
                 .builder()
                 .messageType(RpcConstants.REQUEST_TYPE)
-                .compress((byte) 1)
-                .codec((byte) 1)
+                .compress(CompressTypeEnum.GZIP.getCode())
+                .codec(SerializationTypeEnum.KYRO.getCode())
                 .data(rpcRequest)
                 .build();
         Channel channel = getChannel(inetSocketAddress);

@@ -37,7 +37,6 @@ public class RpcClientHandler extends SimpleChannelInboundHandler<RpcMessage> {
     @SuppressWarnings("unchecked")
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, RpcMessage rpcMessage){
-        log.info("{}", rpcMessage);
         if (rpcMessage.getMessageType() != RpcConstants.HEARTBEAT_RESPONSE_TYPE) {
             RpcResponse<Object> rpcResponse = (RpcResponse<Object>) rpcMessage.getData();
             Promise<Object> promise = UN_PROCESSED_TASK.remove(rpcResponse.getRequestId());
@@ -55,7 +54,7 @@ public class RpcClientHandler extends SimpleChannelInboundHandler<RpcMessage> {
     public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
         if (evt instanceof IdleStateEvent) {
             if (((IdleStateEvent) evt).state() == IdleState.WRITER_IDLE) {
-                log.info("writer idle event has been trigger");
+                log.info("写空闲时间被触发！");
                 Channel channel = NETTY_RPC_CLIENT.getChannel((InetSocketAddress) ctx.channel().remoteAddress());
                 RpcMessage rpcMessage = RpcMessage.builder()
                         .messageType(RpcConstants.HEARTBEAT_REQUEST_TYPE)
@@ -73,7 +72,7 @@ public class RpcClientHandler extends SimpleChannelInboundHandler<RpcMessage> {
 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-        log.info("connection has been cut!");
+        log.info("connection inactive!");
     }
 
     @Override

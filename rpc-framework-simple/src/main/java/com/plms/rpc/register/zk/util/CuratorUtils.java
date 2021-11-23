@@ -27,7 +27,7 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class CuratorUtils {
 
-    private static final int BASE_SLEEP_TIME = 1000;
+    private static final int BASE_SLEEP_TIME = 3000;
     private static final int MAX_RETRIES = 3;
     private static final int WAITING_CONNECT_TIME = 30;
     public static final String ZK_REGISTER_ROOT_PATH = "/plms-rpc";
@@ -65,15 +65,15 @@ public class CuratorUtils {
     public static void createPersistentNode(CuratorFramework zkClient, String path) throws Exception {
         try {
             if (REGISTERED_PATH_SET.contains(path) || zkClient.checkExists().forPath(path) != null) {
-                log.info("the node [{}] already exist", path);
+                log.info("节点 [{}] 已经存在", path);
             } else {
                 zkClient.create().creatingParentsIfNeeded().withMode(CreateMode.PERSISTENT).forPath(path);
-                log.info("the node [{}] is created successfully", path);
+                log.info("节点 [{}] 创建成功", path);
             }
             REGISTERED_PATH_SET.add(path);
         } catch (Exception e) {
             e.printStackTrace();
-            log.error("the node [{}] is created unsuccessfully", path);
+            log.error("节点 [{}] 创建失败", path);
         }
     }
 
@@ -99,6 +99,7 @@ public class CuratorUtils {
     public static void clearRegistry(CuratorFramework zkClient, InetSocketAddress address) {
         REGISTERED_PATH_SET.stream().parallel().forEach(path -> {
             try {
+                path = path.split("#")[0];
                 if (path.endsWith(address.toString())) {
                     zkClient.delete().forPath(path);
                 }
@@ -106,7 +107,7 @@ public class CuratorUtils {
                 log.error("clear registry for path [{}] fail", path);
             }
         });
-        log.info("clear registry of address [{}] successfully", address.toString());
+        log.info("从注册表中清除 [{}] 成功", address.toString());
     }
 
     private static void registerWatcher(CuratorFramework zkClient, String rpcServiceName) throws Exception {
