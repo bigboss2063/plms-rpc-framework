@@ -1,6 +1,7 @@
 package com.plms.rpc.extension;
 
 import cn.hutool.core.util.StrUtil;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.BufferedReader;
@@ -44,6 +45,7 @@ public final class ExtensionLoader<T> {
      * @param type 接口类型
      * @return 实现类加载器
      */
+    @SuppressWarnings("unchecked")
     public static <T> ExtensionLoader<T> getExtensionLoader(Class<T> type) {
         if (type == null) {
             throw new IllegalArgumentException("extension type can not be null!");

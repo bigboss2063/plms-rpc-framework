@@ -22,7 +22,10 @@ import java.io.IOException;
 @Slf4j
 public class KryoSerializer implements Serializer {
 
-    private ThreadLocal<Kryo> kryoThreadLocal = ThreadLocal.withInitial(() -> {
+    /**
+     * kryo 不是线程安全的，所以每一个线程都要有自己的 kryo 实例
+     */
+    private final ThreadLocal<Kryo> kryoThreadLocal = ThreadLocal.withInitial(() -> {
         Kryo kryo = new Kryo();
         kryo.register(RpcRequest.class);
         kryo.register(RpcResponse.class);

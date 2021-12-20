@@ -6,7 +6,6 @@ import com.plms.rpc.exception.RpcException;
 import com.plms.rpc.extension.ExtensionLoader;
 import com.plms.rpc.factory.SingletonFactory;
 import com.plms.rpc.register.ServiceDiscovery;
-import com.plms.rpc.register.zk.ZkServiceDiscoveryImpl;
 import com.plms.rpc.remoting.client.handler.RpcClientHandler;
 import com.plms.rpc.remoting.client.provider.ChannelProvider;
 import com.plms.rpc.remoting.codec.RpcMessageDecoder;
@@ -25,7 +24,6 @@ import io.netty.handler.timeout.IdleStateHandler;
 import io.netty.util.concurrent.DefaultPromise;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
 
 import java.net.InetSocketAddress;
 import java.util.concurrent.CompletableFuture;
@@ -37,14 +35,13 @@ import java.util.concurrent.CompletableFuture;
 @Slf4j
 public class NettyRpcClient {
 
-    private Bootstrap bootstrap;
-    private NioEventLoopGroup eventLoopGroup;
-    private ServiceDiscovery serviceDiscovery;
-    private ChannelProvider channelProvider;
+    private final Bootstrap bootstrap;
+    private final ServiceDiscovery serviceDiscovery;
+    private final ChannelProvider channelProvider;
     public NettyRpcClient() {
         serviceDiscovery = ExtensionLoader.getExtensionLoader(ServiceDiscovery.class).getExtension("zkDiscovery");
         channelProvider = SingletonFactory.getInstance(ChannelProvider.class);
-        eventLoopGroup = new NioEventLoopGroup();
+        NioEventLoopGroup eventLoopGroup = new NioEventLoopGroup();
         bootstrap = new Bootstrap();
         bootstrap.channel(NioSocketChannel.class)
                 .group(eventLoopGroup)

@@ -17,4 +17,6 @@ public @interface RpcService {
     String version() default "";
 
     String group() default "";
+
+    int weight() default 0;
 }

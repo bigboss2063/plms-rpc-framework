@@ -1,14 +1,9 @@
 package com.plms.rpc;
 
-import com.plms.rpc.annotation.RpcReference;
 import com.plms.rpc.annotation.RpcScan;
-import com.plms.rpc.config.RpcConfig;
-import com.plms.rpc.proxy.RpcClientProxy;
-import com.plms.rpc.remoting.client.NettyRpcClient;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import java.io.IOException;
-import java.util.Scanner;
 
 /**
  * @Author bigboss

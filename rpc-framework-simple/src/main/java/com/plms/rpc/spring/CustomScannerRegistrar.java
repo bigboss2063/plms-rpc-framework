@@ -1,6 +1,5 @@
 package com.plms.rpc.spring;
 
-import com.plms.rpc.annotation.RpcReference;
 import com.plms.rpc.annotation.RpcScan;
 import com.plms.rpc.annotation.RpcService;
 import lombok.extern.slf4j.Slf4j;
@@ -14,6 +13,7 @@ import org.springframework.core.type.StandardAnnotationMetadata;
 import org.springframework.stereotype.Component;
 
 /**
+ * 自定义一个 Bean 扫描并注册的类
  * @Author bigboss
  * @Date 2021/11/23 11:19
  */

@@ -16,7 +16,7 @@ public enum RpcConfigEnum {
     /**
      * RPC配置文件路径
      */
-    RPC_CONFIG_PATH("config/plms-rpc.properties"),
+    RPC_CONFIG_PATH("config/plms-rpc-dev.properties"),
 
     /**
      * zookeeper地址

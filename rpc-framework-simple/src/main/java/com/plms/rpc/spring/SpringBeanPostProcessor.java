@@ -18,6 +18,7 @@ import org.springframework.stereotype.Component;
 import java.lang.reflect.Field;
 
 /**
+ * 自定义 BeanPostProcessor，来自动消费和注册服务
  * @Author bigboss
  * @Date 2021/11/23 11:32
  */
@@ -37,16 +38,18 @@ public class SpringBeanPostProcessor implements BeanPostProcessor {
     @SneakyThrows
     @Override
     public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
+        // 如果这个 Bean 被 @RpcService 标注，那么在该方法中将服务注册出去
         if (bean.getClass().isAnnotationPresent(RpcService.class)) {
             log.info("[{}] is annotated with [{}]",
                     bean.getClass().getName(),
                     RpcService.class.getCanonicalName());
+            // 获取 RpcService 里的版本号、实现类、权值
             RpcService rpcService = bean.getClass().getAnnotation(RpcService.class);
             RpcConfig rpcConfig = RpcConfig.builder()
                     .service(bean)
                     .group(rpcService.group())
                     .version(rpcService.version())
-                    .weight(3)
+                    .weight(rpcService.weight())
                     .build();
             serviceProvider.publishService(rpcConfig);
         }
@@ -56,18 +59,22 @@ public class SpringBeanPostProcessor implements BeanPostProcessor {
     @Override
     public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
         Class<?> targetClass = bean.getClass();
+        // 获取到 Bean 上的所有属性
         Field[] declaredFields = targetClass.getDeclaredFields();
         for (Field declaredField : declaredFields) {
+            // 找到被 @RpcReference 标注的属性
             RpcReference rpcReference = declaredField.getAnnotation(RpcReference.class);
             if (rpcReference != null) {
                 RpcConfig rpcConfig = RpcConfig.builder()
                         .group(rpcReference.group())
                         .version(rpcReference.version())
                         .build();
+                // 获取远程调用的代理对象
                 RpcClientProxy rpcClientProxy = new RpcClientProxy(rpcClient, rpcConfig);
                 Object proxy = rpcClientProxy.getProxy(declaredField.getType());
                 declaredField.setAccessible(true);
                 try {
+                    // 将代理对象赋值到被 @RpcReference 标注的属性上，让客户端可以直接调用远程服务
                     declaredField.set(bean, proxy);
                 } catch (IllegalAccessException e) {
                     e.printStackTrace();

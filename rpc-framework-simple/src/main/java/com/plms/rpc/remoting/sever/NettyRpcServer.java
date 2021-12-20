@@ -26,7 +26,6 @@ import org.springframework.stereotype.Component;
 public class NettyRpcServer {
 
     public static Integer PORT;
-    private ServerBootstrap serverBootstrap;
     private NioEventLoopGroup boss;
     private NioEventLoopGroup workers;
     private final ServiceProvider serviceProvider = SingletonFactory.getInstance(ZkServiceProviderImpl.class);
@@ -40,7 +39,7 @@ public class NettyRpcServer {
             ServiceShutDownHooker.getServiceShutDownHooker().clearAllServices();
             boss = new NioEventLoopGroup(1);
             workers = new NioEventLoopGroup();
-            serverBootstrap = new ServerBootstrap();
+            ServerBootstrap serverBootstrap = new ServerBootstrap();
             serverBootstrap.group(boss, workers)
                     .channel(NioServerSocketChannel.class)
                     .childHandler(new ChannelInitializer<NioSocketChannel>() {
